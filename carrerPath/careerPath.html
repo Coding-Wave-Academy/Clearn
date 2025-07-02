@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clearn - AI Career Assessor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors */
+            --primary-color: #1c43d7;
+            --primary-dark: #1c43d7;
+            --primary-light: #e0e7ff;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --bg-dark: #0f172a;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --text-light: #ffffff;
+            
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --border-radius-lg: 16px;
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary-color), #059669);
+            --gradient-hero: linear-gradient(135deg, #1c43d7 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Assessment Section */
+        .assessment-section {
+            padding: 2rem 0;
+        }
+
+        .assessment-container {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .assessment-start {
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .assessment-header {
+            margin-bottom: 3rem;
+        }
+
+        .assessment-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .assessment-header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .assessment-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        .feature-text h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-text p {
+            color: var(--text-secondary);
+        }
+
+        .assessment-cta {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .assessment-note {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Question Container */
+        .question-container {
+            padding: 2rem;
+        }
+
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--gradient-primary);
+            width: 5%; /* Will be updated via JS */
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: right;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .question-card {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-category {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            background: var(--primary-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .question-number {
+            width: 30px;
+            height: 30px;
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .question-content {
+            margin-bottom: 2rem;
+        }
+
+        .question-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .answer-option {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .answer-option:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .answer-option.selected {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .question-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Results Container */
+        .results-container {
+            padding: 3rem;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .results-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .results-header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .results-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .profile-card {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .profile-match {
+            background: var(--accent-color);
+            color: var(--text-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .profile-content {
+            padding: 1.5rem;
+        }
+
+        .profile-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .profile-section h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .strength-list {
+            list-style: none;
+        }
+
+        .strength-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .strength-list li i {
+            color: var(--secondary-color);
+        }
+
+        .work-style-chart {
+            height: 150px;
+            background: var(--bg-tertiary);
+            border-radius: var(--border-radius-sm);
+            padding: 1rem;
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: var(--primary-color);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+
+        .chart-bar::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .interest-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .interest-tag {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .career-paths-card {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .career-paths {
+            padding: 1.5rem;
+        }
+
+        .career-path {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .career-path:last-child {
+            margin-bottom: 0;
+        }
+
+        .career-path:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .career-path-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-light);
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.25rem;
+        }
+
+        .career-path-content {
+            flex: 1;
+        }
+
+        .career-path-content h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .career-path-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .career-path-match {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .learning-path-section {
+            margin-bottom: 3rem;
+        }
+
+        .learning-path-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .learning-path {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .learning-path::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .learning-step {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .learning-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-resources {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .resource-link:hover {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .results-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /* Full Report Container */
+        .full-report-container {
+            padding: 3rem;
+            display: none;
+        }
+
+        .full-report-container.active {
+            display: block;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            border-radius: var(--border-radius);
+        }
+
+        .report-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .report-sections {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .report-section {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+        }
+
+        .report-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-gap-analysis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-category {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+            padding: 1.5rem;
+        }
+
+        .skill-category h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .skill-level {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .skill-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-color);
+        }
+
+        .skill-dot.filled {
+            background: var(--primary-color);
+        }
+
+        .career-progression {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .progression-year {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .year-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .year-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .year-salary {
+            font-size: 1rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .mentor-matches {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .mentor-card {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .mentor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .mentor-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .mentor-role {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .mentor-match {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--text-light);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Payment Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0.25rem;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .payment-summary {
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-details {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-details h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .plan-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .plan-price .amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .plan-price .currency {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(28, 67, 215, 0.1);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-lg);
+            padding: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1001;
+            min-width: 300px;
+        }
+
+        .toast.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0.25rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .results-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .assessment-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+
+            .skill-gap-analysis,
+            .career-progression,
+            .mentor-matches {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .assessment-start {
+                padding: 2rem 1rem;
+            }
+            
+            .assessment-header h2 {
+                font-size: 2rem;
+            }
+            
+            .question-card {
+                padding: 1.5rem;
+            }
+            
+            .results-container {
+                padding: 2rem 1rem;
+            }
+
+            .modal {
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Assessment Container -->
+    <div class="container">
+        <section class="assessment-section">
+            <div class="assessment-container" id="assessmentContainer">
+                <!-- Initial State -->
+                <div class="assessment-start" id="assessmentStart">
+                    <div class="assessment-header">
+                        <h2>AI Career Assessment</h2>
+                        <p>Answer a series of questions to discover your ideal career path</p>
+                    </div>
+                    <div class="assessment-features">
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Skills Analysis</h4>
+                                <p>Identify your strongest technical and soft skills</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Interest Mapping</h4>
+                                <p>Discover what truly motivates and excites you</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Personality Insights</h4>
+                                <p>Understand your work style and ideal environment</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="assessment-cta">
+                        <button class="btn btn-primary btn-large" id="beginAssessmentBtn">
+                            Begin Assessment (10-15 minutes)
+                        </button>
+                        <p class="assessment-note">Your data is secure and will only be used to generate your career recommendations</p>
+                    </div>
+                </div>
+
+                <!-- Question Container (Initially Hidden) -->
+                <div class="question-container" id="questionContainer" style="display: none;">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" id="progressBar"></div>
+                        </div>
+                        <div class="progress-text">
+                            Question <span id="currentQuestion">1</span> of <span id="totalQuestions">20</span>
+                        </div>
+                    </div>
+                    
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-category" id="questionCategory">Skills Assessment</div>
+                            <div class="question-number" id="questionNumberBadge">1</div>
+                        </div>
+                        <div class="question-content">
+                            <h3 id="questionText">How comfortable are you with learning new technologies?</h3>
+                            <div class="answer-options" id="answerOptions">
+                                <!-- Options will be dynamically inserted here -->
+                            </div>
+                        </div>
+                        <div class="question-actions">
+                            <button class="btn btn-secondary" id="prevQuestionBtn" disabled>Previous</button>
+                            <button class="btn btn-primary" id="nextQuestionBtn" disabled>Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Container (Initially Hidden) -->
+                <div class="results-container" id="resultsContainer" style="display: none;">
+                    <div class="results-header">
+                        <h2>Your Career Assessment Results</h2>
+                        <p>Based on your responses, we've identified your ideal career paths and learning opportunities</p>
+                    </div>
+                    
+                    <div class="results-summary">
+                        <div class="profile-card">
+                            <div class="profile-header">
+                                <h3>Your Career Profile</h3>
+                                <span class="profile-match">93% Match</span>
+                            </div>
+                            <div class="profile-content">
+                                <div class="profile-section">
+                                    <h4>Top Strengths</h4>
+                                    <ul class="strength-list" id="strengthsList">
+                                        <!-- Strengths will be dynamically inserted here -->
+                                    </ul>
+                                </div>
+                                <div class="profile-section">
+                                    <h4>Work Style</h4>
+                                    <div class="work-style-chart" id="workStyleChart">
+                                        <!-- Work style chart will be dynamically inserted here -->
+                                    </div>
+                                </div>
+                                <div class="profile-section">
+                                    <h4>Key Interests</h4>
+                                    <div class="interest-tags" id="interestTags">
+                                        <!-- Interest tags will be dynamically inserted here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="career-paths-card">
+                            <div class="card-header">
+                                <h3>Recommended Career Paths</h3>
+                                <button class="btn btn-outline btn-sm" id="exploreMoreBtn">Explore More</button>
+                            </div>
+                            <div class="career-paths" id="careerPaths">
+                                <!-- Career paths will be dynamically inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="learning-path-section">
+                        <h3>Your Personalized Learning Journey</h3>
+                        <div class="learning-path" id="learningPath">
+                            <!-- Learning path will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    
+                    <div class="results-actions">
+                        <button class="btn btn-primary btn-large" id="unlockFullReportBtn">
+                            <i class="fas fa-unlock"></i>
+                            Unlock Full Career Report
+                        </button>
+                        <button class="btn btn-secondary btn-large" id="findMentorBtn">
+                            <i class="fas fa-user-friends"></i>
+                            Find a Career Mentor
+                        </button>
+                        <button class="btn btn-outline btn-large" id="shareResultsBtn">
+                            <i class="fas fa-share-alt"></i>
+                            Share Results
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Full Report Container (Initially Hidden) -->
+                <div class="full-report-container" id="fullReportContainer">
+                    <div class="report-header">
+                        <h2>Complete Career Analysis Report</h2>
+                        <p>Your comprehensive career roadmap with detailed insights and personalized recommendations</p>
+                    </div>
+
+                    <div class="report-sections">
+                        <!-- Skill Gap Analysis -->
+                        <div class="report-section">
+                            <h3>
+                                <i class="fas fa-chart-bar"></i>
+                                Detailed Skill Gap Analysis
+                            </h3>
+                            <div class="skill-gap-analysis">
+                                <div class="skill-category">
+                                    <h4>Technical Skills</h4>
+                                    <div class="skill-item">
+                                        <span>JavaScript/React</span>
+                                        <div class="skill-level">
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot"></div>
+                                            <div class="skill-dot"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span>Python/Django</span>
+                                        <div class="skill-level">
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot"></div>
+                                            <div class="skill-dot"></div>
+                                            <div class="skill-dot"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span>Database Design</span>
+                                        <div class="skill-level">
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="skill-category">
+                                    <h4>Soft Skills</h4>
+                                    <div class="skill-item">
+                                        <span>Communication</span>
+                                        <div class="skill-level">
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span>Leadership</span>
+                                        <div class="skill-level">
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot"></div>
+                                            <div class="skill-dot"></div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-item">
+                                        <span>Problem Solving</span>
+                                        <div class="skill-level">
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot filled"></div>
+                                            <div class="skill-dot"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5-Year Career Progression -->
+                        <div class="report-section">
+                            <h3>
+                                <i class="fas fa-road"></i>
+                                5-Year Career Progression Plan
+                            </h3>
+                            <div class="career-progression">
+                                <div class="progression-year">
+                                    <div class="year-number">Year 1</div>
+                                    <div class="year-title">Junior Developer</div>
+                                    <div class="year-salary">1,800,000 - 3,000,000 FCFA</div>
+                                    <p>Focus on building foundational skills and gaining practical experience</p>
+                                </div>
+                                <div class="progression-year">
+                                    <div class="year-number">Year 2-3</div>
+                                    <div class="year-title">Mid-Level Developer</div>
+                                    <div class="year-salary">3,000,000 - 4,800,000 FCFA</div>
+                                    <p>Develop specialization and take on more complex projects</p>
+                                </div>
+                                <div class="progression-year">
+                                    <div class="year-number">Year 4-5</div>
+                                    <div class="year-title">Senior Developer</div>
+                                    <div class="year-salary">4,800,000 - 7,200,000 FCFA</div>
+                                    <p>Lead projects and mentor junior developers</p>
+                                </div>
+                                <div class="progression-year">
+                                    <div class="year-number">Year 5+</div>
+                                    <div class="year-title">Tech Lead/Architect</div>
+                                    <div class="year-salary">7,200,000+ FCFA</div>
+                                    <p>Drive technical strategy and architectural decisions</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mentor Matches -->
+                        <div class="report-section">
+                            <h3>
+                                <i class="fas fa-user-tie"></i>
+                                Your Mentor Matches
+                            </h3>
+                            <div class="mentor-matches">
+                                <div class="mentor-card">
+                                    <div class="mentor-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="mentor-name">Sarah Kamau</div>
+                                    <div class="mentor-role">Senior Full-Stack Developer at Andela</div>
+                                    <div class="mentor-match">95% Match</div>
+                                    <button class="btn btn-primary btn-sm" style="margin-top: 1rem;">Connect</button>
+                                </div>
+                                <div class="mentor-card">
+                                    <div class="mentor-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="mentor-name">Ahmed Diallo</div>
+                                    <div class="mentor-role">Tech Lead at Flutterwave</div>
+                                    <div class="mentor-match">88% Match</div>
+                                    <button class="btn btn-primary btn-sm" style="margin-top: 1rem;">Connect</button>
+                                </div>
+                                <div class="mentor-card">
+                                    <div class="mentor-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="mentor-name">Fatima Nkomo</div>
+                                    <div class="mentor-role">Engineering Manager at Paystack</div>
+                                    <div class="mentor-match">82% Match</div>
+                                    <button class="btn btn-primary btn-sm" style="margin-top: 1rem;">Connect</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional sections can be added here -->
+                        <div class="report-section">
+                            <h3>
+                                <i class="fas fa-briefcase"></i>
+                                Job Market Insights
+                            </h3>
+                            <p>Based on current market trends in Central/West Africa:</p>
+                            <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                                <li>Full-stack developers are in high demand with 35% growth expected</li>
+                                <li>Remote work opportunities increasing by 50% annually</li>
+                                <li>Average salary growth of 15-20% per year for skilled developers</li>
+                                <li>Top hiring companies: Flutterwave, Paystack, Andela, MTN, Orange</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="results-actions" style="margin-top: 2rem;">
+                        <button class="btn btn-primary btn-large" onclick="window.print()">
+                            <i class="fas fa-download"></i>
+                            Download PDF Report
+                        </button>
+                        <button class="btn btn-secondary btn-large" id="backToResultsBtn">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Summary
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Unlock Premium Features</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-summary">
+                    <div class="plan-details">
+                        <h4 id="planTitle">Premium Career Report</h4>
+                        <p id="planDescription">Get detailed career analysis, skill gap assessment, and mentor connections</p>
+                        <div class="plan-price">
+                            <span class="amount" id="planAmount">500</span>
+                            <span class="currency">FCFA</span>
+                        </div>
+                    </div>
+                   <form id="paymentForm">
+        <label for="number">Phone Number:</label>
+        <input type="tel" id="number" name="number" required><br><br>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" min="1" required><br><br>
+        <!-- <button type="submit">Pay</button> -->
+<button class="btn btn-primary" type="submit" id="payButton">
+                    <i class="fas fa-lock"></i>
+                    Complete Payment
+                </button>
+
+    </form>
+                    
+                    <div id="result"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelPayment">Cancel</button>
+                <button class="btn btn-primary" id="processPayment">
+                    
+                    
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+        <button class="toast-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <script src="./pay.js"></script>
+    
+    <script>
+        // Global variables
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let assessmentQuestions = [];
+        let assessmentResults = null;
+        let currentPaymentType = '';
+
+        // DOM Elements
+        const assessmentContainer = document.getElementById('assessmentContainer');
+        const assessmentStart = document.getElementById('assessmentStart');
+        const questionContainer = document.getElementById('questionContainer');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const fullReportContainer = document.getElementById('fullReportContainer');
+        const paymentModal = document.getElementById('paymentModal');
+        const toast = document.getElementById('toast');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            loadAssessmentQuestions();
+        });
+
+        function setupEventListeners() {
+            // Assessment start button
+            document.getElementById('beginAssessmentBtn').addEventListener('click', startAssessment);
+            
+            // Question navigation
+            document.getElementById('prevQuestionBtn').addEventListener('click', previousQuestion);
+            document.getElementById('nextQuestionBtn').addEventListener('click', nextQuestion);
+
+            // Results actions
+            document.getElementById('unlockFullReportBtn').addEventListener('click', () => {
+                showPaymentModal('report');
+            });
+            document.getElementById('findMentorBtn').addEventListener('click', () => {
+                showPaymentModal('mentor');
+            });
+            document.getElementById('shareResultsBtn').addEventListener('click', shareResults);
+            document.getElementById('exploreMoreBtn').addEventListener('click', () => {
+                showToast('Exploring more career paths...', 'info');
+            });
+
+            // Full report navigation
+            document.getElementById('backToResultsBtn').addEventListener('click', () => {
+                fullReportContainer.classList.remove('active');
+                resultsContainer.style.display = 'block';
+            });
+
+            // Payment modal controls
+            document.getElementById('modalClose').addEventListener('click', hidePaymentModal);
+            document.getElementById('cancelPayment').addEventListener('click', hidePaymentModal);
+            document.getElementById('processPayment').addEventListener('click', handlePayment);
+
+            // Toast close
+            document.querySelector('.toast-close').addEventListener('click', hideToast);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+
+        function loadAssessmentQuestions() {
+            // Simulated API call to load questions
+            assessmentQuestions = [
+                {
+                    id: 1,
+                    category: "Skills Assessment",
+                    question: "How comfortable are you with learning new technologies?",
+                    type: "scale",
+                    options: [
+                        { value: 5, text: "Very comfortable - I love exploring new tech" },
+                        { value: 4, text: "Comfortable - I adapt well to new tools" },
+                        { value: 3, text: "Somewhat comfortable - I need some guidance" },
+                        { value: 2, text: "Uncomfortable - I prefer familiar technologies" },
+                        { value: 1, text: "Very uncomfortable - I avoid new tech" }
+                    ]
+                },
+                {
+                    id: 2,
+                    category: "Interest Mapping",
+                    question: "Which type of work environment excites you most?",
+                    type: "single",
+                    options: [
+                        { value: "startup", text: "Fast-paced startup with lots of variety" },
+                        { value: "corporate", text: "Structured corporate environment" },
+                        { value: "remote", text: "Remote work with flexible schedule" },
+                        { value: "freelance", text: "Freelance/consulting work" },
+                        { value: "nonprofit", text: "Mission-driven nonprofit organization" }
+                    ]
+                },
+                {
+                    id: 3,
+                    category: "Skills Assessment",
+                    question: "How would you rate your problem-solving abilities?",
+                    type: "scale",
+                    options: [
+                        { value: 5, text: "Excellent - I thrive on complex challenges" },
+                        { value: 4, text: "Good - I can solve most problems independently" },
+                        { value: 3, text: "Average - I solve problems with some help" },
+                        { value: 2, text: "Below average - I need significant guidance" },
+                        { value: 1, text: "Poor - I struggle with problem-solving" }
+                    ]
+                },
+                {
+                    id: 4,
+                    category: "Personality Insights",
+                    question: "Do you prefer working alone or in teams?",
+                    type: "scale",
+                    options: [
+                        { value: 5, text: "Strongly prefer teams - I'm energized by collaboration" },
+                        { value: 4, text: "Prefer teams - I work better with others" },
+                        { value: 3, text: "No preference - I'm comfortable either way" },
+                        { value: 2, text: "Prefer alone - I'm more productive independently" },
+                        { value: 1, text: "Strongly prefer alone - I work best in isolation" }
+                    ]
+                },
+                {
+                    id: 5,
+                    category: "Interest Mapping",
+                    question: "Which activities do you find most engaging?",
+                    type: "multiple",
+                    options: [
+                        { value: "coding", text: "Writing code and building applications" },
+                        { value: "design", text: "Creating visual designs and user interfaces" },
+                        { value: "analysis", text: "Analyzing data and finding patterns" },
+                        { value: "communication", text: "Presenting ideas and communicating with others" },
+                        { value: "strategy", text: "Planning and strategic thinking" },
+                        { value: "teaching", text: "Teaching and mentoring others" }
+                    ]
+                },
+                {
+                    id: 6,
+                    category: "Skills Assessment",
+                    question: "How comfortable are you with mathematics and logical thinking?",
+                    type: "scale",
+                    options: [
+                        { value: 5, text: "Very comfortable - Math is my strong suit" },
+                        { value: 4, text: "Comfortable - I handle math well" },
+                        { value: 3, text: "Somewhat comfortable - Basic math is fine" },
+                        { value: 2, text: "Uncomfortable - I struggle with math" },
+                        { value: 1, text: "Very uncomfortable - I avoid mathematical tasks" }
+                    ]
+                },
+                {
+                    id: 7,
+                    category: "Personality Insights",
+                    question: "How do you handle stress and pressure?",
+                    type: "single",
+                    options: [
+                        { value: "thrive", text: "I thrive under pressure and perform better" },
+                        { value: "manage", text: "I manage stress well and stay focused" },
+                        { value: "cope", text: "I cope adequately but prefer less pressure" },
+                        { value: "struggle", text: "I struggle with high-pressure situations" },
+                        { value: "avoid", text: "I actively avoid stressful situations" }
+                    ]
+                },
+                {
+                    id: 8,
+                    category: "Interest Mapping",
+                    question: "What motivates you most in your career?",
+                    type: "single",
+                    options: [
+                        { value: "impact", text: "Making a positive impact on society" },
+                        { value: "money", text: "Financial success and stability" },
+                        { value: "growth", text: "Personal and professional growth" },
+                        { value: "recognition", text: "Recognition and achievement" },
+                        { value: "balance", text: "Work-life balance and flexibility" }
+                    ]
+                },
+                {
+                    id: 9,
+                    category: "Skills Assessment",
+                    question: "How would you describe your communication skills?",
+                    type: "scale",
+                    options: [
+                        { value: 5, text: "Excellent - I'm a natural communicator" },
+                        { value: 4, text: "Good - I communicate effectively" },
+                        { value: 3, text: "Average - I get my point across" },
+                        { value: 2, text: "Below average - I struggle to express ideas" },
+                        { value: 1, text: "Poor - Communication is very challenging for me" }
+                    ]
+                },
+                {
+                    id: 10,
+                    category: "Personality Insights",
+                    question: "How do you prefer to learn new skills?",
+                    type: "single",
+                    options: [
+                        { value: "hands-on", text: "Hands-on practice and experimentation" },
+                        { value: "structured", text: "Structured courses and formal education" },
+                        { value: "mentorship", text: "One-on-one mentorship and guidance" },
+                        { value: "self-study", text: "Self-directed study and research" },
+                        { value: "peer", text: "Peer learning and group discussions" }
+                    ]
+                }
+            ];
+        }
+
+        function startAssessment() {
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            
+            // Hide start screen and show question container
+            assessmentStart.style.display = 'none';
+            questionContainer.style.display = 'block';
+            
+            // Display first question
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = assessmentQuestions[currentQuestionIndex];
+            const totalQuestions = assessmentQuestions.length;
+            
+            // Update progress
+            const progressPercent = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+            
+            // Update question content
+            document.getElementById('questionCategory').textContent = question.category;
+            document.getElementById('questionNumberBadge').textContent = currentQuestionIndex + 1;
+            document.getElementById('questionText').textContent = question.question;
+            
+            // Generate answer options
+            const answerOptions = document.getElementById('answerOptions');
+            answerOptions.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'answer-option';
+                optionElement.dataset.value = option.value;
+                optionElement.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 20px; height: 20px; border: 2px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <div style="width: 10px; height: 10px; background: var(--primary-color); border-radius: 50%; opacity: 0; transition: opacity 0.3s ease;"></div>
+                        </div>
+                        <span>${option.text}</span>
+                    </div>
+                `;
+                
+                optionElement.addEventListener('click', () => selectAnswer(optionElement, option.value));
+                answerOptions.appendChild(optionElement);
+            });
+            
+            // Update navigation buttons
+            document.getElementById('prevQuestionBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextQuestionBtn').disabled = true;
+            
+            // Restore previous answer if exists
+            if (userAnswers[currentQuestionIndex]) {
+                const previousAnswer = userAnswers[currentQuestionIndex];
+                const selectedOption = answerOptions.querySelector(`[data-value="${previousAnswer}"]`);
+                if (selectedOption) {
+                    selectAnswer(selectedOption, previousAnswer);
+                }
+            }
+        }
+
+        function selectAnswer(optionElement, value) {
+            // Remove previous selection
+            document.querySelectorAll('.answer-option').forEach(option => {
+                option.classList.remove('selected');
+                const indicator = option.querySelector('div > div');
+                if (indicator) indicator.style.opacity = '0';
+            });
+            
+            // Add selection to clicked option
+            optionElement.classList.add('selected');
+            const indicator = optionElement.querySelector('div > div');
+            if (indicator) indicator.style.opacity = '1';
+            
+            // Store answer
+            userAnswers[currentQuestionIndex] = value;
+            
+            // Enable next button
+            document.getElementById('nextQuestionBtn').disabled = false;
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < assessmentQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                // Assessment complete
+                completeAssessment();
+            }
+        }
+
+        function completeAssessment() {
+            // Hide question container and show loading
+            questionContainer.style.display = 'none';
+            
+            // Show loading state
+            const loadingElement = document.createElement('div');
+            loadingElement.className = 'assessment-loading';
+            loadingElement.innerHTML = `
+                <div style="text-align: center; padding: 3rem;">
+                    <div style="width: 80px; height: 80px; border: 4px solid var(--primary-light); border-top: 4px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 2rem;"></div>
+                    <h3>Analyzing Your Responses...</h3>
+                    <p>Our AI is processing your answers to create your personalized career profile</p>
+                </div>
+            `;
+            assessmentContainer.appendChild(loadingElement);
+            
+            // Simulate API call to analyze results
+            setTimeout(() => {
+                assessmentContainer.removeChild(loadingElement);
+                generateResults();
+                displayResults();
+            }, 3000);
+        }
+
+        function generateResults() {
+            // Simulate AI analysis of user responses
+            assessmentResults = {
+                profile: {
+                    match: 93,
+                    strengths: [
+                        "Problem-solving",
+                        "Technical aptitude",
+                        "Continuous learning",
+                        "Team collaboration",
+                        "Communication skills"
+                    ],
+                    workStyle: {
+                        teamwork: 85,
+                        independence: 70,
+                        leadership: 75,
+                        creativity: 90,
+                        analytical: 95
+                    },
+                    interests: [
+                        "Web Development",
+                        "Data Analysis",
+                        "AI/Machine Learning",
+                        "User Experience",
+                        "Problem Solving"
+                    ]
+                },
+                careerPaths: [
+                    {
+                        title: "Full-Stack Developer",
+                        match: 95,
+                        description: "Build end-to-end web applications using modern technologies",
+                        icon: "fas fa-code",
+                        salary: "$45,000 - $85,000",
+                        growth: "High demand, 22% growth expected"
+                    },
+                    {
+                        title: "Data Scientist",
+                        match: 88,
+                        description: "Analyze complex data to drive business decisions",
+                        icon: "fas fa-chart-line",
+                        salary: "$55,000 - $95,000",
+                        growth: "Fastest growing field, 35% growth expected"
+                    },
+                    {
+                        title: "UX/UI Designer",
+                        match: 82,
+                        description: "Design intuitive and beautiful user experiences",
+                        icon: "fas fa-paint-brush",
+                        salary: "$40,000 - $75,000",
+                        growth: "Strong demand, 18% growth expected"
+                    }
+                ],
+                learningPath: [
+                    {
+                        step: 1,
+                        title: "Foundation Skills",
+                        description: "Master the basics of programming and web technologies",
+                        duration: "2-3 months",
+                        resources: [
+                            { type: "course", name: "HTML/CSS Fundamentals", url: "#" },
+                            { type: "course", name: "JavaScript Basics", url: "#" },
+                            { type: "project", name: "Build Your First Website", url: "#" }
+                        ]
+                    },
+                    {
+                        step: 2,
+                        title: "Frontend Development",
+                        description: "Learn modern frontend frameworks and tools",
+                        duration: "3-4 months",
+                        resources: [
+                            { type: "course", name: "React.js Mastery", url: "#" },
+                            { type: "course", name: "Responsive Design", url: "#" },
+                            { type: "project", name: "Portfolio Website", url: "#" }
+                        ]
+                    },
+                    {
+                        step: 3,
+                        title: "Backend Development",
+                        description: "Build server-side applications and APIs",
+                        duration: "3-4 months",
+                        resources: [
+                            { type: "course", name: "Node.js & Express", url: "#" },
+                            { type: "course", name: "Database Design", url: "#" },
+                            { type: "project", name: "Full-Stack Application", url: "#" }
+                        ]
+                    },
+                    {
+                        step: 4,
+                        title: "Professional Development",
+                        description: "Prepare for the job market and career growth",
+                        duration: "1-2 months",
+                        resources: [
+                            { type: "mentorship", name: "1-on-1 Career Coaching", url: "#" },
+                            { type: "course", name: "Interview Preparation", url: "#" },
+                            { type: "project", name: "Capstone Project", url: "#" }
+                        ]
+                    }
+                ]
+            };
+        }
+
+        function displayResults() {
+            // Show results container
+            resultsContainer.style.display = 'block';
+            
+            // Populate strengths
+            const strengthsList = document.getElementById('strengthsList');
+            strengthsList.innerHTML = '';
+            assessmentResults.profile.strengths.forEach(strength => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-check"></i> ${strength}`;
+                strengthsList.appendChild(li);
+            });
+            
+            // Populate work style chart
+            const workStyleChart = document.getElementById('workStyleChart');
+            workStyleChart.innerHTML = '';
+            Object.entries(assessmentResults.profile.workStyle).forEach(([key, value]) => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${value}%`;
+                bar.setAttribute('data-label', key.charAt(0).toUpperCase() + key.slice(1));
+                workStyleChart.appendChild(bar);
+            });
+            
+            // Populate interest tags
+            const interestTags = document.getElementById('interestTags');
+            interestTags.innerHTML = '';
+            assessmentResults.profile.interests.forEach(interest => {
+                const tag = document.createElement('span');
+                tag.className = 'interest-tag';
+                tag.textContent = interest;
+                interestTags.appendChild(tag);
+            });
+            
+            // Populate career paths
+            const careerPaths = document.getElementById('careerPaths');
+            careerPaths.innerHTML = '';
+            assessmentResults.careerPaths.forEach(path => {
+                const pathElement = document.createElement('div');
+                pathElement.className = 'career-path';
+                pathElement.innerHTML = `
+                    <div class="career-path-icon">
+                        <i class="${path.icon}"></i>
+                    </div>
+                    <div class="career-path-content">
+                        <h4>${path.title}</h4>
+                        <p>${path.description}</p>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-muted);">
+                            <span><i class="fas fa-dollar-sign"></i> ${path.salary}</span>
+                            <span><i class="fas fa-trending-up"></i> ${path.growth}</span>
+                        </div>
+                    </div>
+                    <div class="career-path-match">${path.match}% match</div>
+                `;
+                careerPaths.appendChild(pathElement);
+            });
+            
+            // Populate learning path
+            const learningPath = document.getElementById('learningPath');
+            learningPath.innerHTML = '';
+            assessmentResults.learningPath.forEach(step => {
+                const stepElement = document.createElement('div');
+                stepElement.className = 'learning-step';
+                
+                const resourcesHTML = step.resources.map(resource => {
+                    const iconMap = {
+                        course: 'fas fa-play-circle',
+                        project: 'fas fa-code',
+                        mentorship: 'fas fa-user-friends'
+                    };
+                    return `<a href="${resource.url}" class="resource-link">
+                        <i class="${iconMap[resource.type]}"></i>
+                        ${resource.name}
+                    </a>`;
+                }).join('');
+                
+                stepElement.innerHTML = `
+                    <div class="step-number">${step.step}</div>
+                    <div class="step-content">
+                        <h4>${step.title}</h4>
+                        <p>${step.description}</p>
+                        <p style="font-size: 0.875rem; color: var(--text-muted);">
+                            <i class="fas fa-clock"></i> Duration: ${step.duration}
+                        </p>
+                        <div class="step-resources">
+                            ${resourcesHTML}
+                        </div>
+                    </div>
+                `;
+                learningPath.appendChild(stepElement);
+            });
+        }
+
+        function showPaymentModal(type) {
+            currentPaymentType = type;
+            
+            // Update modal content based on payment type
+            if (type === 'report') {
+                document.getElementById('modalTitle').textContent = 'Unlock Full Career Report';
+                document.getElementById('planTitle').textContent = 'Premium Career Report';
+                document.getElementById('planDescription').textContent = 'Get detailed skill gap analysis, 5-year career progression plan, and personalized recommendations';
+                document.getElementById('planAmount').textContent = '15,000';
+            } else if (type === 'mentor') {
+                document.getElementById('modalTitle').textContent = 'Find Career Mentor';
+                document.getElementById('planTitle').textContent = 'Mentor Matching Service';
+                document.getElementById('planDescription').textContent = 'Connect with experienced professionals in your field for personalized guidance';
+                document.getElementById('planAmount').textContent = '25,000';
+            }
+            
+            paymentModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            setTimeout(() => {
+                document.getElementById('phoneNumber').focus();
+            }, 300);
+        }
+
+        function hidePaymentModal() {
+            paymentModal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Reset form
+            document.getElementById('phoneNumber').value = '';
+            document.getElementById('email').value = '';
+        }
+
+        function handlePayment() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const email = document.getElementById('email').value;
+
+            // Validate inputs
+            if (!phoneNumber || !email) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showToast('Please enter a valid email address', 'error');
+                return;
+            }
+
+            if (!isValidPhoneNumber(phoneNumber)) {
+                showToast('Please enter a valid phone number', 'error');
+                return;
+            }
+
+            // Simulate payment processing
+            const paymentBtn = document.getElementById('processPayment');
+            const originalText = paymentBtn.innerHTML;
+            
+            paymentBtn.innerHTML = '<div class="spinner"></div> Processing Payment...';
+            paymentBtn.disabled = true;
+
+            // Simulate payment processing
+            setTimeout(() => {
+                const success = Math.random() > 0.1; // 90% success rate for demo
+                
+                if (success) {
+                    hidePaymentModal();
+                    showToast('Payment successful! Redirecting to your premium content...', 'success');
+                    
+                    // Redirect to appropriate content based on payment type
+                    setTimeout(() => {
+                        if (currentPaymentType === 'report') {
+                            showFullReport();
+                        } else if (currentPaymentType === 'mentor') {
+                            showMentorSection();
+                        }
+                    }, 2000);
+                } else {
+                    showToast('Payment failed. Please try again or contact support.', 'error');
+                }
+                
+                paymentBtn.innerHTML = originalText;
+                paymentBtn.disabled = false;
+            }, 3000);
+        }
+
+        function showFullReport() {
+            resultsContainer.style.display = 'none';
+            fullReportContainer.classList.add('active');
+            fullReportContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showMentorSection() {
+            // For mentor payment, show the full report with emphasis on mentor section
+            showFullReport();
+            setTimeout(() => {
+                const mentorSection = document.querySelector('.mentor-matches').parentElement;
+                mentorSection.scrollIntoView({ behavior: 'smooth' });
+                mentorSection.style.border = '2px solid var(--primary-color)';
+                mentorSection.style.borderRadius = 'var(--border-radius)';
+                setTimeout(() => {
+                    mentorSection.style.border = '';
+                }, 3000);
+            }, 500);
+        }
+
+        function shareResults() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My AI Career Assessment Results',
+                    text: `I just discovered my ideal career path! My top match is ${assessmentResults.careerPaths[0].title} with a ${assessmentResults.careerPaths[0].match}% compatibility score.`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const shareText = `I just discovered my ideal career path! My top match is ${assessmentResults.careerPaths[0].title} with a ${assessmentResults.careerPaths[0].match}% compatibility score.`;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText);
+                    showToast('Results copied to clipboard!', 'success');
+                } else {
+                    showToast('Share feature not supported on this browser', 'info');
+                }
+            }
+        }
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function isValidPhoneNumber(phone) {
+            const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+            return phoneRegex.test(phone.replace(/\s/g, ''));
+        }
+
+        function showToast(message, type = 'info') {
+            const toastIcon = toast.querySelector('.toast-icon');
+            const toastMessage = toast.querySelector('.toast-message');
+            
+            // Set icon based on type
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            
+            toastIcon.className = `toast-icon ${icons[type]}`;
+            toastMessage.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            // Auto hide after 4 seconds
+            setTimeout(hideToast, 4000);
+        }
+
+        function hideToast() {
+            toast.classList.remove('show');
+        }
+
+        function handleKeyboardShortcuts(e) {
+            // Escape to close modals and toast
+            if (e.key === 'Escape') {
+                if (paymentModal.classList.contains('active')) {
+                    hidePaymentModal();
+                }
+                if (toast.classList.contains('show')) {
+                    hideToast();
+                }
+            }
+            
+            // Arrow keys for question navigation (when in assessment)
+            if (questionContainer.style.display === 'block') {
+                if (e.key === 'ArrowLeft' && !document.getElementById('prevQuestionBtn').disabled) {
+                    previousQuestion();
+                }
+                if (e.key === 'ArrowRight' && !document.getElementById('nextQuestionBtn').disabled) {
+                    nextQuestion();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
